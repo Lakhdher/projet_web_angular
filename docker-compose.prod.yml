@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  backend:
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DB_HOST=mysql_db
+    depends_on:
+      - mysql_db
+
+  mysql_db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: store
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3306
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  frontend:
+    image: frontend
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
