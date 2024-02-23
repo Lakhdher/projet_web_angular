@@ -1,20 +1,20 @@
 version: "3.7"
 
 services:
-  backend:
+  backend-api:
     build: 
-      context: ./backend
-      dockerfile: Dockerfile.prod
+      context: ./Backend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
-      - NODE_ENV=production
-      - DB_HOST=mysql_db
+      - NODE_ENV=development
+      - DB_HOST=mysql-db-dev
     depends_on:
-      - mysql_db
+      - mysql-db-dev
 
-  mysql_db:
+  mysql-db-dev:
     image: mysql
     restart: always
     environment:
@@ -25,11 +25,18 @@ services:
       MYSQL_TCP_PORT: 3306
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql/dev
 
-  frontend:
+  frontend_dev:
     image: frontend
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ./Frontend
+      dockerfile: Dockerfile.dev
     ports:
-      - "4200:80"
+      - "4200:4200"
+    depends_on:
+      - backend-api
+
+volumes:
+  mysql_dev_data:
