@@ -1,4 +1,4 @@
-# Fullstack Web Project (Angular + NestJS)
+# Fullstack Web Project (Angular + NestJS).
 
 ## Installation
 
